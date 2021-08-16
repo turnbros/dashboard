@@ -50,18 +50,16 @@
                     <thead>
                         <tr>
                             <th onclick="sortTable(0)">Name</th>
-                            <th onclick="sortTable(1)">Project</th>
-                            <th onclick="sortTable(2)">Source</th>
-                            <th onclick="sortTable(3)">Health</th>
+                            <th onclick="sortTable(1)">Module</th>
+                            <th onclick="sortTable(2)">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for row_item in module_content["data_rows"] %}
                             <tr>
                                 <td>{{ row_item["name"] }}</td>
-                                <td>{{ row_item["project"] }}</td>
-                                <td>{{ row_item["source"] }}</td>
-                                <td>{{ row_item["health"] }}</td>
+                                <td>{{ row_item["module"] }}</td>
+                                <td>{{ row_item["status"] }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

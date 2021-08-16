@@ -71,17 +71,21 @@ class Module(object):
   def get_module_script(self, script_name):
     return self._module_scripts[script_name]
 
+#  def handle_request(self, **kwargs):
+#    pass
+
   def render(self, **kwargs):
     template_data = {}
     try:
+      #template_data = self._implementation.handle_request(**kwargs)
       template_data = self.handle_request(**kwargs)
     except Exception as e:
       logging.error(f"Failure while rendering module {self.name}: {e.message}")
     finally:
+      print(f"Module Content: {template_data}")
       return Template(self.template).render(module_content=template_data)
 
-  def handle_request(self, **kwargs):
-    pass
+
 
   def warmup(self):
     pass
