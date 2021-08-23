@@ -1,6 +1,13 @@
 <script>
-	workspace_module_name = "{{ module_content['module_name'] }}";
-	workspace_manifest = {{ module_content["module_manifest"] }};
+	const tenant_name = "{{ module_content['tenant_name'] }}"
+	const api_endpoint = "{{ module_content['api_endpoint'] }}"
+	const workspace_module_name = "{{ module_content['module_name'] }}";
+	const workspace_manifest = {{ module_content["module_manifest"] }};
+	const api_base_url = "http://" + api_endpoint + "/tenant/" + tenant_name + "/"
+
+	document.addEventListener('DOMContentLoaded', function() {
+		get_resources()
+	}, false);
 </script>
 
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -67,7 +74,6 @@
 			<div class="panel-heading">
 				Resources
                 <span class="pull-right clickable panel-toggle"><em class="fa fa-toggle-up"></em></span>
-				<span onclick="showModal()" class="pull-right panel-settings"><em class="fa fa-plus"></em></span>
 			</div>
 
 			<div class="panel-body">
@@ -79,14 +85,7 @@
                             <th onclick="sortTable(2)">Status</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {% for row_item in module_content["data_rows"] %}
-                            <tr>
-                                <td>{{ row_item["name"] }}</td>
-                                <td>{{ row_item["module"] }}</td>
-                                <td>{{ row_item["status"] }}</td>
-                            </tr>
-                        {% endfor %}
+                    <tbody id="module_resource_table">
                     </tbody>
                 </table>
 			</div>

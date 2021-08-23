@@ -1,0 +1,78 @@
+<script>
+	const tenant_name = "{{ module_content['tenant_name'] }}"
+	const api_endpoint = "{{ module_content['api_endpoint'] }}"
+	const workspace_module_name = "{{ module_content['module_name'] }}";
+	const workspace_manifest = {{ module_content["module_manifest"] }};
+	const api_base_url = "http://" + api_endpoint + "/tenant/" + tenant_name + "/"
+
+	document.addEventListener('DOMContentLoaded', function() {
+		get_module_resources()
+   		document.getElementById("delete_resource").addEventListener("click", get_module_resources);
+		document.getElementById("create_resource").addEventListener("click", get_module_resources);
+	}, false);
+</script>
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<div class="w3-container">
+	<div id="myModal" class="w3-modal">
+		<div class="w3-modal-content w3-animate-left w3-card-4">
+	  		<header class="w3-container w3-teal">
+				<span onclick="closeModal()" class="w3-button w3-display-topright">&times;</span>
+				<h2 style="color: #ffffff">Add Resource</h2>
+		  	</header>
+			<br />
+	  		<div id="modal_form" class="w3-container">
+	  		</div>
+			<div class="w3-container">
+				<button id="create_resource" class="btn btn-default" onclick="submit_modal()">Submit</button>
+        	</div>
+			<br />
+		</div>
+	</div>
+</div>
+
+<div class="w3-container">
+	<div id="view_resource_modal" class="w3-modal">
+		<div class="w3-modal-content w3-animate-left w3-card-4">
+	  		<header class="w3-container w3-teal">
+				<span onclick="close_view_resource_modal()" class="w3-button w3-display-topright">&times;</span>
+				<h2 id="view_resource_name" style="color: #ffffff">Resource Name</h2>
+		  	</header>
+			<br />
+	  		<div id="resource_modal_form" class="w3-container">
+	  		</div>
+			<div class="w3-container">
+				<button id="delete_resource" class="btn btn-default" >Delete Resource</button>
+        	</div>
+			<br />
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+
+			<div class="panel-heading">
+				Resources
+                <span class="pull-right clickable panel-toggle"><em class="fa fa-toggle-up"></em></span>
+				<span onclick="showModal()" class="pull-right panel-settings"><em class="fa fa-plus"></em></span>
+			</div>
+
+			<div class="panel-body">
+                <table class="table table-striped table-hover" id="myTable">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)">Name</th>
+                            <th onclick="sortTable(1)">Module</th>
+                            <th onclick="sortTable(2)">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="module_resource_table">
+                    </tbody>
+                </table>
+			</div>
+
+		</div>
+	</div>
+</div>

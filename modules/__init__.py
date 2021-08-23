@@ -6,11 +6,12 @@ from jinja2 import Template
 
 class Module(object):
 
-  def __init__(self, index, name, title, icon, path):
+  def __init__(self, path, index=None, name=None, title=None, icon=None):
 
     self._config = config_handler.Config()
     self._module_styles_dir = f"{path}/styles"
     self._module_scripts_dir = f"{path}/scripts"
+    self._module_html_dir = f"{path}/html"
 
     self._index = index
     self._name = name
@@ -19,8 +20,10 @@ class Module(object):
     self._path = path
     self._module_styles = {}
     self._module_scripts = {}
+    self._module_htmls = {}
     self._module_styles_list = []
     self._module_scripts_list = []
+    self._module_htmls_list = []
 
     with open(f"{path}/index.html") as module_template:
       self._template = module_template.read()
@@ -37,21 +40,43 @@ class Module(object):
           self._module_scripts[module_script] = module_script_file.read()
           self._module_scripts_list.append(f"{self._module_scripts_dir}/{module_script}")
 
+    if os.path.isdir(self._module_html_dir):
+      for module_html in next(os.walk(self._module_html_dir))[2]:
+        with open(f"{self._module_html_dir}/{module_html}") as module_html_file:
+          self._module_htmls[module_html] = module_html_file.read()
+          self._module_htmls_list.append(f"{self._module_scripts_dir}/{module_html}")
+
   @property
   def index(self):
     return self._index
+
+  @index.setter
+  def index(self, value):
+    self._index = value
 
   @property
   def name(self):
     return self._name
 
+  @name.setter
+  def name(self, value):
+    self._name = value
+
   @property
   def title(self):
     return self._title
 
+  @title.setter
+  def title(self, value):
+    self._title = value
+
   @property
   def icon(self):
     return self._icon
+
+  @icon.setter
+  def icon(self, value):
+    self._icon = value
 
   @property
   def template(self):
@@ -65,11 +90,18 @@ class Module(object):
   def module_scripts(self):
     return self._module_scripts_list
 
+  @property
+  def module_htmls(self):
+    return self._module_htmls_list
+
   def get_module_style(self, style_name):
     return self._module_styles[style_name]
 
   def get_module_script(self, script_name):
     return self._module_scripts[script_name]
+
+  def get_module_html(self, html_name):
+    return self._module_htmls[html_name]
 
 #  def handle_request(self, **kwargs):
 #    pass
@@ -163,7 +195,8 @@ class ModuleHandler(object):
                                                        module_title=called_module.title,
                                                        module_content=called_module.render(**kwargs),
                                                        module_styles=called_module.module_styles,
-                                                       module_scripts=called_module.module_scripts)
+                                                       module_scripts=called_module.module_scripts,
+                                                       module_htmls=called_module.module_htmls)
 
         except Exception as no_session:
           logging.error(no_session)

@@ -2,21 +2,25 @@ from modules import Module
 import http.client
 import json
 
+from util.config import config
+
+
 class Main(Module):
 
   def __init__(self):
     super().__init__(
       index=0,
-      name="sample",
-      title="Overview Sample",
+      name="overview",
+      title="Overview",
       icon="fa fa-connectdevelop",
       path=f"{str(__name__).replace('.', '/')}"
     )
+    self.tenant_name = "test-tenant-1"
 
   def handle_request(self, **kwargs):
     print("Handle Request")
     api_url = self._config.get_string_value("api", "api_base_url")
-    tenant = "test_tenant_2"
+    tenant = "test-tenant-1"
     url = f"/tenant/{tenant}/resource"
 
     print(f"API URL: {api_url}")
@@ -41,27 +45,15 @@ class Main(Module):
         "status" : resource["status"]
       })
     print(f"Data Rows: {data_rows}")
-    return {
 
-      "data_rows": data_rows
-#      [
-#        {
-#          "name" : "foo",
-#          "project" : "project-foo",
-#          "source" : "https://github.com/project-foo/foo",
-#          "health" : "healthy"
-#        },
-#        {
-#          "name": "bar",
-#          "project": "project-bar",
-#          "source": "https://github.com/project-bar/bar",
-#          "health": "healthy"
-#        },
-#        {
-#          "name": "baz",
-#          "project": "project-baz",
-#          "source": "https://github.com/project-baz/baz",
-#          "health": "healthy"
-#        }
-#      ]
+
+    conn = http.client.HTTPConnection(api_url)
+    conn.request("GET", "/workspace/manifest")
+    module_manifest = json.loads(conn.getresponse().read())
+    return {
+      "tenant_name": self.tenant_name,
+      "module_name": "example_module_1",
+      "module_manifest": json.dumps(module_manifest),
+      "data_rows": data_rows,
+      "api_endpoint": config.get_string_value("api", "api_base_url")
     }
